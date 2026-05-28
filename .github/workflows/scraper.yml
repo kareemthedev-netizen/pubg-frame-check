@@ -1,24 +1,159 @@
-name: AI Device Scraper
+  import requests
+from bs4 import BeautifulSoup
+import json
+import os
+from datetime import datetime
+import re
+import sys
+import time
 
-on:
-  schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+print("🚀 AI Scraper Started -", datetime.now())
+print("Python version:", sys.version)
 
-jobs:
-  scrape:
-    runs-on: ubuntu-latest
+def clean_price(price_text):
+    if not price_text:
+        return None
+    numbers = re.findall(r'\d+', price_text)
+    if numbers:
+        return int(''.join(numbers))
+    return None
+
+def extract_brand(full_name):
+    brands = ['Samsung', 'Apple', 'iPhone', 'Xiaomi', 'Poco', 'Realme', 
+              'OnePlus', 'Huawei', 'Google', 'ASUS', 'Nubia', 'RedMagic']
+    for brand in brands:
+        if brand.lower() in full_name.lower():
+            return brand
+    return "Other"
+
+def fetch_from_mobizil():
+    print("📱 Fetching from Mobizil...")
+    devices = []
+    try:
+        # ✅ هنا هنخليه يشبه المتصفح 100%
+        url = "https://mobizil.com/category/xiaomi-phones/"
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Cache-Control': 'max-age=0',
+        }
+        
+        session = requests.Session()
+        response = session.get(url, headers=headers, timeout=30)
+        
+        print(f"Response status: {response.status_code}")
+        
+        if response.status_code != 200:
+            print("❌ Access denied - trying alternative source...")
+            # لو اترفضنا، نجرب مصدر بديل
+            return fetch_alternative()
+        
+        soup = BeautifulSoup(response.text, 'html.parser')
+        
+        # هنحاول بكل الطرق الممكنة عشان نلاقي البيانات
+        phones = []
+        # طريقة 1
+        phones = soup.find_all('div', class_='product-item')
+        # طريقة 2
+        if not phones:
+            phones = soup.find_all('div', class_='product')
+        # طريقة 3
+        if not phones:
+            phones = soup.find_all('article', class_='product')
+        # طريقة 4
+        if not phones:
+            phones = soup.find_all('li', class_='product-item')
+            
+        print(f"📱 Found {len(phones)} potential products")
+        
+        for phone in phones:
+            # نجرّب أكتر من مكان لاسم الجهاز
+            name_elem = phone.find('h3')
+            if not name_elem:
+                name_elem = phone.find('h2')
+            if not name_elem:
+                name_elem = phone.find('a', class_='product-name')
+            if not name_elem:
+                name_elem = phone.find('div', class_='product-title')
+            
+            # نجرّب أكتر من مكان للسعر
+            price_elem = phone.find('span', class_='price')
+            if not price_elem:
+                price_elem = phone.find('div', class_='price')
+            if not price_elem:
+                price_elem = phone.find('span', class_='amount')
+            
+            if name_elem and price_elem:
+                name = name_elem.text.strip()
+                price = clean_price(price_elem.text)
+                if name and price and price > 1000:  # نتأكد إن السعر منطقي
+                    devices.append({
+                        'name': name,
+                        'priceEGP': price,
+                        'source': 'mobizil',
+                        'last_updated': datetime.now().isoformat()
+                    })
+                    print(f"✅ Found: {name} - {price} EGP")
+                    
+    except Exception as e:
+        print(f"❌ Error fetching: {e}")
+        # نجرب المصدر البديل
+        return fetch_alternative()
     
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+    return devices
+
+def fetch_alternative():
+    """مصدر بديل للبيانات لو موبيزل مش شغال"""
+    print("🔄 Trying alternative data source...")
+    
+    # ده مثال بسيط - هنضيف أجهزة يدوية كمؤقت
+    sample_devices = [
+        {"name": "Samsung Galaxy S24 Ultra", "priceEGP": 65000},
+        {"name": "iPhone 15 Pro Max", "priceEGP": 72999},
+        {"name": "Xiaomi 13T Pro", "priceEGP": 26900},
+        {"name": "Poco F5", "priceEGP": 18999},
+        {"name": "OnePlus 11 5G", "priceEGP": 29999},
+    ]
+    
+    devices = []
+    for device in sample_devices:
+        devices.append({
+            'name': device['name'],
+            'priceEGP': device['priceEGP'],
+            'source': 'sample_data',
+            'last_updated': datetime.now().isoformat()
+        })
+        print(f"✅ Added sample: {device['name']} - {device['priceEGP']} EGP")
+    
+    return devices
+
+def main():
+    print("=" * 50)
+    
+    devices = fetch_from_mobizil()
+    
+    print("=" * 50)
+    print(f"📊 Total devices found: {len(devices)}")
+    
+    if devices:
+        print("\n📱 Devices list:")
+        for i, device in enumerate(devices):
+            print(f"  {i+1}. {device['name']}: {device['priceEGP']} EGP")
         
-    - name: Install dependencies
-      run: pip install -r scraper/requirements.txt
-        
-    - name: Run scraper
-      env:
-        FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
-      run: python scraper/main.py
+        # هنا هنضيف بعدين الكود بتاع Firebase
+        # هنضيف الأجهزة لقاعدة البيانات
+    else:
+        print("⚠️ No devices found")
+    
+    print("=" * 50)
+    print("🏁 Finished")
+
+if __name__ == "__main__":
+    main()
