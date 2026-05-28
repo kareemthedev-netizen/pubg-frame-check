@@ -5,7 +5,6 @@ import os
 import re
 from datetime import datetime
 import sys
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 print("🚀 AI Auto Device Manager with Web Scraping -", datetime.now())
 
@@ -33,146 +32,52 @@ def get_firebase():
         return None
 
 # ========================================
-# 2. جلب الأجهزة من مواقع مختلفة
+# 2. قاعدة بيانات الأجهزة المضمونة (بدون Scraping)
 # ========================================
 
-def scrape_mobizil_category(url, brand):
-    """جلب الأجهزة من موبيزل حسب العلامة التجارية"""
-    devices = []
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-    }
+# دي قائمة الأجهزة المعروفة اللي بتدعم فريمات عالية
+# الـ AI هيضيفهم لو مش موجودين
+DEVICES_FALLBACK = [
+    # 120 FPS
+    {"brand": "OnePlus", "model": "11 5G", "screenHz": 120, "maxFPS": 120, "priceEGP": 29999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-11-5g.jpg"},
+    {"brand": "ASUS", "model": "ROG Phone 8", "screenHz": 165, "maxFPS": 120, "priceEGP": 45000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8.jpg"},
+    {"brand": "Nubia", "model": "RedMagic 9 Pro", "screenHz": 120, "maxFPS": 120, "priceEGP": 38000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/nubia-redmagic-9-pro.jpg"},
+    {"brand": "Google", "model": "Pixel 8 Pro", "screenHz": 120, "maxFPS": 120, "priceEGP": 40000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg"},
     
-    try:
-        response = requests.get(url, headers=headers, timeout=30)
-        if response.status_code != 200:
-            print(f"❌ Failed to fetch {url}: {response.status_code}")
-            return devices
-        
-        soup = BeautifulSoup(response.text, 'html.parser')
-        
-        # البحث عن المنتجات
-        products = soup.find_all('div', class_='product-item')
-        if not products:
-            products = soup.find_all('div', class_='product')
-        
-        for product in products:
-            try:
-                name_elem = product.find('h3')
-                if not name_elem:
-                    name_elem = product.find('a', class_='product-name')
-                
-                price_elem = product.find('span', class_='price')
-                if not price_elem:
-                    price_elem = product.find('span', class_='amount')
-                
-                if name_elem and price_elem:
-                    name = name_elem.text.strip()
-                    price_text = price_elem.text.strip()
-                    price = re.findall(r'\d+', price_text)
-                    
-                    if price:
-                        devices.append({
-                            'name': name,
-                            'brand': brand,
-                            'priceEGP': int(''.join(price)),
-                            'source': 'mobizil'
-                        })
-                        print(f"✅ Found: {name} - {price[0]} EGP")
-            except Exception as e:
-                continue
-                
-    except Exception as e:
-        print(f"❌ Error scraping {url}: {e}")
+    # 90 FPS
+    {"brand": "OnePlus", "model": "10 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 22999, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-10-pro.jpg"},
+    {"brand": "Poco", "model": "F4 GT", "screenHz": 120, "maxFPS": 90, "priceEGP": 15999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f4-gt.jpg"},
+    {"brand": "Poco", "model": "F5", "screenHz": 120, "maxFPS": 90, "priceEGP": 18999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f5.jpg"},
+    {"brand": "Poco", "model": "X6 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 18500, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-x6-pro.jpg"},
+    {"brand": "Samsung", "model": "Galaxy S23 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 59999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg"},
+    {"brand": "Samsung", "model": "Galaxy S24 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 65000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-ultra.jpg"},
+    {"brand": "Samsung", "model": "Galaxy S24 Plus", "screenHz": 120, "maxFPS": 90, "priceEGP": 45000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-plus.jpg"},
+    {"brand": "Xiaomi", "model": "13T Pro", "screenHz": 144, "maxFPS": 90, "priceEGP": 26900, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t-pro.jpg"},
+    {"brand": "Xiaomi", "model": "12T Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 20999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-12t-pro.jpg"},
+    {"brand": "Xiaomi", "model": "14", "screenHz": 120, "maxFPS": 90, "priceEGP": 35000, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg"},
+    {"brand": "Realme", "model": "GT Neo 3", "screenHz": 120, "maxFPS": 90, "priceEGP": 13999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-neo-3.jpg"},
+    {"brand": "Realme", "model": "GT 5G", "screenHz": 120, "maxFPS": 90, "priceEGP": 24999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-5g.jpg"},
+    {"brand": "iPhone", "model": "14 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 72999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro-max.jpg"},
+    {"brand": "iPhone", "model": "15 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 79999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro-max.jpg"},
+    {"brand": "iPhone", "model": "15 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 69999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg"},
+    {"brand": "Nothing", "model": "Phone 2", "screenHz": 120, "maxFPS": 90, "priceEGP": 30000, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/nothing-phone-2.jpg"},
+    {"brand": "Honor", "model": "Magic 5 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 32999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/honor-magic5-pro.jpg"},
+    {"brand": "Vivo", "model": "X90 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 37999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/vivo-x90-pro.jpg"},
     
-    return devices
-
-def scrape_all_sources():
-    """جلب الأجهزة من كل المصادر"""
-    all_devices = []
-    
-    # قائمة بمواقع الموبايلات
-    sources = [
-        ("https://mobizil.com/category/xiaomi-phones/", "Xiaomi"),
-        ("https://mobizil.com/category/samsung-phones/", "Samsung"),
-        ("https://mobizil.com/category/oneplus-phones/", "OnePlus"),
-        ("https://mobizil.com/category/realme-phones/", "Realme"),
-        ("https://mobizil.com/category/poco-phones/", "Poco"),
-    ]
-    
-    print("📱 Fetching devices from online sources...")
-    
-    # استخدام ThreadPoolExecutor للجلب المتوازي (أسرع)
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = {executor.submit(scrape_mobizil_category, url, brand): (url, brand) 
-                   for url, brand in sources}
-        
-        for future in as_completed(futures):
-            devices = future.result()
-            all_devices.extend(devices)
-    
-    print(f"📊 Total devices found: {len(all_devices)}")
-    return all_devices
+    # 60 FPS
+    {"brand": "Samsung", "model": "Galaxy A73", "screenHz": 120, "maxFPS": 60, "priceEGP": 11999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a73-5g.jpg"},
+    {"brand": "Samsung", "model": "Galaxy A54", "screenHz": 120, "maxFPS": 60, "priceEGP": 10999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a54.jpg"},
+    {"brand": "Poco", "model": "M5", "screenHz": 90, "maxFPS": 60, "priceEGP": 8999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-m5.jpg"},
+    {"brand": "Realme", "model": "C55", "screenHz": 90, "maxFPS": 60, "priceEGP": 6999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-c55.jpg"},
+    {"brand": "Infinix", "model": "Note 30", "screenHz": 120, "maxFPS": 60, "priceEGP": 7999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/infinix-note-30.jpg"},
+    {"brand": "Tecno", "model": "Pova 5", "screenHz": 120, "maxFPS": 60, "priceEGP": 7499, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/tecno-pova-5.jpg"},
+]
 
 # ========================================
-# 3. تصنيف الأجهزة (فريمات)
-# ========================================
-
-def classify_device_by_name(name, brand):
-    """تحديد إعدادات الجهاز بناءً على اسمه وفئته"""
-    name_lower = name.lower()
-    
-    # تحديد الفريمات بناءً على الموديل
-    if 'snapdragon 8 gen' in name_lower or 'dimensity 9000' in name_lower:
-        max_fps = 120
-        screen_hz = 120
-        category = 'flagship'
-        price_category = 'premium'
-    elif 'ultra' in name_lower or 'pro max' in name_lower:
-        max_fps = 90
-        screen_hz = 120
-        category = 'flagship'
-        price_category = 'premium'
-    elif 'pro' in name_lower and ('xiaomi' in name_lower or 'realme' in name_lower):
-        max_fps = 90
-        screen_hz = 120
-        category = 'flagship'
-        price_category = 'mid'
-    elif 'poco f' in name_lower or 'gt neo' in name_lower:
-        max_fps = 90
-        screen_hz = 120
-        category = 'midrange'
-        price_category = 'mid'
-    else:
-        max_fps = 60
-        screen_hz = 90
-        category = 'midrange'
-        price_category = 'budget'
-    
-    return max_fps, screen_hz, category, price_category
-
-def get_image_url(brand, model):
-    """توليد رابط صورة من GSMarena"""
-    model_clean = model.replace(' ', '-').replace('/', '-')
-    brand_clean = brand.lower()
-    
-    # روابط GSMarena الصحيحة
-    image_map = {
-        'xiaomi': f'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-{model_clean.lower()}.jpg',
-        'samsung': f'https://fdn2.gsmarena.com/vv/bigpic/samsung-{model_clean.lower()}.jpg',
-        'oneplus': f'https://fdn2.gsmarena.com/vv/bigpic/oneplus-{model_clean.lower()}.jpg',
-        'poco': f'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-{model_clean.lower()}.jpg',
-        'realme': f'https://fdn2.gsmarena.com/vv/bigpic/realme-{model_clean.lower()}.jpg',
-    }
-    
-    return image_map.get(brand_clean, f'https://placehold.co/400x200/1a1a2e/e74c3c?text={brand}+{model}')
-
-# ========================================
-# 4. تحديث Firebase
+# 3. تحديث Firebase
 # ========================================
 
 def get_existing_devices(db):
-    """جلب الأجهزة الموجودة"""
     existing = {}
     try:
         docs = db.collection('devices').stream()
@@ -185,7 +90,6 @@ def get_existing_devices(db):
     return existing
 
 def add_device(db, device_data):
-    """إضافة جهاز جديد"""
     try:
         graphics = {
             "smooth": device_data["maxFPS"],
@@ -206,49 +110,45 @@ def add_device(db, device_data):
             "priceCategory": device_data["priceCategory"],
             "image": device_data["image"],
             "addedDate": datetime.now().isoformat(),
-            "source": device_data.get("source", "auto_scraper"),
             "graphics": graphics
         }
         
         db.collection("devices").add(new_device)
-        print(f"✅ Added: {device_data['brand']} {device_data['model']} ({device_data['maxFPS']} FPS) - {device_data['priceEGP']} EGP")
+        print(f"✅ Added: {device_data['brand']} {device_data['model']} ({device_data['maxFPS']} FPS)")
         return True
     except Exception as e:
         print(f"❌ Failed: {e}")
         return False
 
 def update_device_price(db, device_id, new_price):
-    """تحديث سعر جهاز"""
     try:
         db.collection('devices').document(device_id).update({
             'priceEGP': new_price,
             'last_price_update': datetime.now().isoformat()
         })
-        print(f"💰 Updated price: {device_id} → {new_price} EGP")
+        print(f"💰 Price updated: {device_id} → {new_price} EGP")
     except Exception as e:
         print(f"❌ Update error: {e}")
 
 def update_device_image(db, device_id, new_image):
-    """تحديث صورة جهاز"""
     try:
         db.collection('devices').document(device_id).update({
             'image': new_image,
             'last_image_update': datetime.now().isoformat()
         })
-        print(f"🖼️ Updated image: {device_id}")
+        print(f"🖼️ Image updated: {device_id}")
     except Exception as e:
-        print(f"❌ Image update error: {e}")
+        print(f"❌ Image error: {e}")
 
 # ========================================
-# 5. الوظيفة الرئيسية
+# 4. الوظيفة الرئيسية
 # ========================================
 
 def main():
     print("=" * 50)
-    print("🤖 AI Auto Device Scraper")
+    print("🤖 AI Auto Device Manager")
     print("=" * 50)
     
-    # الاتصال بـ Firebase
     db = get_firebase()
     if not db:
         print("❌ Cannot continue without Firebase")
@@ -256,67 +156,33 @@ def main():
     
     print("✅ Firebase connected")
     
-    # جلب البيانات من الإنترنت
-    scraped_devices = scrape_all_sources()
-    
-    if not scraped_devices:
-        print("⚠️ No devices found from scraping")
-        return
-    
-    # جلب الأجهزة الموجودة
     existing = get_existing_devices(db)
     print(f"📚 Existing devices: {len(existing)}")
     
-    # معالجة كل جهاز
+    # إضافة الأجهزة الجديدة وتحديث الصور
     new_count = 0
-    price_updates = 0
-    image_updates = 0
+    fixed_count = 0
     
-    for device in scraped_devices:
-        max_fps, screen_hz, category, price_category = classify_device_by_name(device['name'], device['brand'])
-        image_url = get_image_url(device['brand'], device['name'].replace(device['brand'], '').strip())
-        
-        model_name = device['name'].replace(device['brand'], '').strip()
-        if not model_name:
-            model_name = device['name']
-        
-        key = f"{device['brand']}_{model_name}"
+    for device in DEVICES_FALLBACK:
+        key = f"{device['brand']}_{device['model']}"
         
         if key in existing:
-            # الجهاز موجود - نتحقق من السعر والصورة
-            existing_price = existing[key]['data'].get('priceEGP')
-            existing_image = existing[key]['data'].get('image', '')
-            
-            if existing_price != device['priceEGP']:
-                update_device_price(db, existing[key]['id'], device['priceEGP'])
-                price_updates += 1
-            
-            if existing_image != image_url and 'placehold' not in image_url:
-                update_device_image(db, existing[key]['id'], image_url)
-                image_updates += 1
+            # الجهاز موجود - نتحقق من الصورة
+            current_image = existing[key]['data'].get('image', '')
+            if current_image != device['image'] and 'placehold' not in device['image']:
+                update_device_image(db, existing[key]['id'], device['image'])
+                fixed_count += 1
         else:
             # جهاز جديد
-            new_device = {
-                "brand": device['brand'],
-                "model": model_name,
-                "maxFPS": max_fps,
-                "screenHz": screen_hz,
-                "priceEGP": device['priceEGP'],
-                "category": category,
-                "priceCategory": price_category,
-                "image": image_url,
-                "source": device.get('source', 'auto_scraper')
-            }
-            add_device(db, new_device)
-            new_count += 1
+            if add_device(db, device):
+                new_count += 1
     
     print("=" * 50)
     print(f"📱 New devices added: {new_count}")
-    print(f"💰 Prices updated: {price_updates}")
-    print(f"🖼️ Images updated: {image_updates}")
-    print(f"📊 Total devices in DB: {len(existing) + new_count}")
+    print(f"🖼️ Images fixed: {fixed_count}")
+    print(f"📊 Total devices now: {len(existing) + new_count}")
     print("=" * 50)
-    print("✅ AI Auto Device Scraper finished!")
+    print("✅ AI Auto Device Manager finished!")
     print("🏁 Completed at:", datetime.now())
 
 if __name__ == "__main__":
