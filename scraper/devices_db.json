@@ -1,0 +1,395 @@
+{
+  "devices": [
+    {
+      "brand": "OnePlus",
+      "model": "11 5G",
+      "screenHz": 120,
+      "maxFPS": 120,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-11-5g.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "OnePlus",
+      "model": "10 Pro",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-10-pro.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Poco",
+      "model": "F4 GT",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "midrange",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f4-gt.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Poco",
+      "model": "F5",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "midrange",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f5.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Poco",
+      "model": "X6 Pro",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "midrange",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-x6-pro.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S23 Ultra",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": 40,
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy S24 Ultra",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-ultra.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": 40,
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy A73",
+      "screenHz": 120,
+      "maxFPS": 60,
+      "category": "midrange",
+      "priceCategory": "budget",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a73-5g.jpg",
+      "graphics": {
+        "smooth": 60,
+        "balanced": 40,
+        "hd": 40,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Xiaomi",
+      "model": "13T Pro",
+      "screenHz": 144,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t-pro.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Xiaomi",
+      "model": "12T Pro",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "midrange",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-12t-pro.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Realme",
+      "model": "GT Neo 3",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "midrange",
+      "priceCategory": "budget",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-neo-3.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPhone 14 Pro Max",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro-max.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": 40,
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPhone 15 Pro Max",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro-max.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": 40,
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "ASUS",
+      "model": "ROG Phone 8",
+      "screenHz": 165,
+      "maxFPS": 120,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Nubia",
+      "model": "RedMagic 9 Pro",
+      "screenHz": 120,
+      "maxFPS": 120,
+      "category": "flagship",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/nubia-redmagic-9-pro.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPad Pro 12.9 (2024)",
+      "screenHz": 120,
+      "maxFPS": 120,
+      "category": "tablet",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-pro-12-9-2022.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPad Pro 11 (2024)",
+      "screenHz": 120,
+      "maxFPS": 120,
+      "category": "tablet",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-pro-11-2022.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPad Air (2024)",
+      "screenHz": 60,
+      "maxFPS": 90,
+      "category": "tablet",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-air-2022.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 40,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Apple",
+      "model": "iPad mini (2024)",
+      "screenHz": 60,
+      "maxFPS": 60,
+      "category": "tablet",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-mini-2021.jpg",
+      "graphics": {
+        "smooth": 60,
+        "balanced": 40,
+        "hd": "not supported",
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy Tab S9 Ultra",
+      "screenHz": 120,
+      "maxFPS": 120,
+      "category": "tablet",
+      "priceCategory": "premium",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-s9-ultra.jpg",
+      "graphics": {
+        "smooth": 120,
+        "balanced": 90,
+        "hd": 60,
+        "hdr": 40,
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy Tab S9+",
+      "screenHz": 120,
+      "maxFPS": 90,
+      "category": "tablet",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-s9-plus.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 40,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Samsung",
+      "model": "Galaxy Tab A9+",
+      "screenHz": 90,
+      "maxFPS": 60,
+      "category": "tablet",
+      "priceCategory": "budget",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-a9-plus.jpg",
+      "graphics": {
+        "smooth": 60,
+        "balanced": 40,
+        "hd": "not supported",
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    },
+    {
+      "brand": "Xiaomi",
+      "model": "Pad 6 Pro",
+      "screenHz": 144,
+      "maxFPS": 90,
+      "category": "tablet",
+      "priceCategory": "mid",
+      "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-pad-6-pro.jpg",
+      "graphics": {
+        "smooth": 90,
+        "balanced": 60,
+        "hd": 60,
+        "hdr": "not supported",
+        "ultraHDR": "not supported",
+        "extremeHDR": "not supported"
+      }
+    }
+  ]
+}
