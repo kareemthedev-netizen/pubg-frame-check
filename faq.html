@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الأسئلة الشائعة - PUBG Frame Check</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="pubg-container">
+        <div class="ad-top"><div class="ad-content"><span class="ad-label">إعلان</span><div><a href="#"><img src="https://placehold.co/800x100/1a1a2e/e74c3c?text=Your+Ad+Here"></a></div></div></div>
+
+        <div class="pubg-header">
+            <div class="logo"><span class="logo-icon">🎮</span><h1>PUBG <span>Frame Check</span></h1></div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">🏠 الرئيسية</a>
+                <a href="popular.html" class="nav-link">🔥 الأكثر مشاهدة</a>
+                <a href="latest.html" class="nav-link">🆕 أحدث الأجهزة</a>
+                <a href="best-value.html" class="nav-link">💎 الأكثر توفيراً</a>
+                <a href="guide.html" class="nav-link">📖 دليل الشراء</a>
+                <a href="faq.html" class="nav-link active">❓ أسئلة شائعة</a>
+                <a href="about.html" class="nav-link">ℹ️ عن الموقع</a>
+            </nav>
+            <button id="themeToggle" class="pubg-btn">🌙</button>
+        </div>
+
+        <div class="dev-bio"><p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | مطور ويب</p></div>
+
+        <div class="faq-container">
+            <h1 class="faq-title">❓ الأسئلة الشائعة</h1>
+            
+            <div class="faq-item">
+                <div class="faq-question">1. إيه هي الفريمات (FPS) في ببجي؟</div>
+                <div class="faq-answer">الفريمات هي عدد الصور اللي بيتم عرضها في الثانية. كل ما زاد الرقم، كل ما كانت اللعبة أفسح في الحركة وأسرع في الاستجابة.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">2. إيه الفرق بين 60 و 90 و 120 فريم؟</div>
+                <div class="faq-answer">الفرق واضح في سلاسة الحركة. 60 فريم كويس جداً، 90 فريم ممتاز، 120 فريم هو أعلى مستوى ممكن ويعطيك أفضل استجابة في اللعبة.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">3. إزاي أعرف إن جهازي يدعم 120 فريم في ببجي؟</div>
+                <div class="faq-answer">ابحث عن جهازك في موقعنا، وشوف جدول الفريمات. لو لقيت "Smooth: 120 FPS"، يبقى جهازك بيدعمها رسمياً.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">4. هل شاشة 120Hz تعني إن جهازي هيشغل ببجي 120 فريم؟</div>
+                <div class="faq-answer">لا، الشاشة مجرد قطعة واحدة من المعادلة. اللعبة نفسها لازم تكون مدعمة 120 فريم على جهازك. في أجهزة كتير شاشاتها 120Hz لكن ببجي مش بتدعم 120 فريم عليها.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">5. ليه أجهزة آيفون 14/15 Pro Max بتدعم 90 فريم بس مش 120؟</div>
+                <div class="faq-answer">ده بسبب سياسة آبل مع مطوري الألعاب. ببجي مدعمة 90 فريم كحد أقصى على آيفون عشان الاستقرار والحرارة.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">6. هل الفريمات العالية بتأثر على عمر البطارية؟</div>
+                <div class="faq-answer">أيوة، الفريمات العالية بتستهلك بطارية أسرع، خصوصاً مع إعدادات جرافيكس عالية. الأفضل تستخدم الشاحن أثناء اللعب لو هتلعب 120 فريم لفترة طويلة.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">7. إزاي أحسن فريمات ببجي على جهازي الحالي؟</div>
+                <div class="faq-answer">خلي الإعدادات على Smooth، قفل التطبيقات الخلفية، شغل وضع الأداء العالي، وخلي الشاشة على أعلى تردد (90/120Hz).</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">8. فين ألاقي أسعار الأجهزة في موقعكم؟</div>
+                <div class="faq-answer">كل جهاز في موقعنا واقف جنبه سعره التقريبي في السوق المصري. الأسعار بتتحدث كل فترة، لكن الأفضل تشوف المتاجر قبل الشراء.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">9. البيانات اللي في موقعكم حقيقية ولا تخمينية؟</div>
+                <div class="faq-answer">البيانات مبنية على القوائم الرسمية من لعبة ببجي وتجارب حقيقية للمستخدمين. كل جهاز وموثوقيته مذكورة في مصدر المعلومات.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">10. هل فيه صفحة للأجهزة اللوحية (تابلت)؟</div>
+                <div class="faq-answer">أيوة، أجهزة التابلت موجودة في كل الصفحات، وعندهم فلاتر مخصصة. في "الرئيسية" تقدر تختار فلتر "📟 تابلت" وتشوف كل الأجهزة اللوحية.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">11. ليه بعض الأجهزة HDR مش مدعوم؟</div>
+                <div class="faq-answer">إعدادات HDR بتستهلك موارد كتير جداً، فمعظم الأجهزة بتدعمها على حساب الفريمات (بتنزل لـ 40 فريم أو أقل). الأجهزة الflagship بس اللي بتشغلها ثابت.</div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">12. إزاي أساهم في تحديث البيانات؟</div>
+                <div class="faq-answer">تقدر تبعت رسالة على الإيميل اللي موجود أعلى الصفحة: kareemthedev@gmail.com، أو تشارك تجربتك على وسائل التواصل الخاصة بنا.</div>
+            </div>
+        </div>
+
+        <div class="ads-bottom">
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+1"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+2"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+3"></a></div>
+        </div>
+
+        <div class="pubg-footer">
+            <div class="social-links">
+                <a href="https://www.youtube.com/@MrBits-8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"><span>YouTube</span></a>
+                <a href="https://whatsapp.com/channel/0029Vb7vA9EHgZWYc8Y56a1w" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384023.png"><span>WhatsApp</span></a>
+                <a href="https://www.facebook.com/share/1BGqkqvAhZ/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"><span>Facebook</span></a>
+                <a href="https://www.tiktok.com/@mr.bits.8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png"><span>TikTok</span></a>
+            </div>
+            <p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | PUBG Frame Check © 2026</p>
+        </div>
+    </div>
+
+    <div id="toast" class="pubg-toast"></div>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

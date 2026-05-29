@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دليل الشراء - PUBG Frame Check</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="pubg-container">
+        <div class="ad-top"><div class="ad-content"><span class="ad-label">إعلان</span><div><a href="#"><img src="https://placehold.co/800x100/1a1a2e/e74c3c?text=Your+Ad+Here"></a></div></div></div>
+
+        <div class="pubg-header">
+            <div class="logo"><span class="logo-icon">🎮</span><h1>PUBG <span>Frame Check</span></h1></div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">🏠 الرئيسية</a>
+                <a href="popular.html" class="nav-link">🔥 الأكثر مشاهدة</a>
+                <a href="latest.html" class="nav-link">🆕 أحدث الأجهزة</a>
+                <a href="best-value.html" class="nav-link">💎 الأكثر توفيراً</a>
+                <a href="guide.html" class="nav-link active">📖 دليل الشراء</a>
+                <a href="faq.html" class="nav-link">❓ أسئلة شائعة</a>
+                <a href="about.html" class="nav-link">ℹ️ عن الموقع</a>
+            </nav>
+            <button id="themeToggle" class="pubg-btn">🌙</button>
+        </div>
+
+        <div class="dev-bio"><p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | مطور ويب</p></div>
+
+        <div class="guide-container">
+            <h1 class="guide-title">📖 دليل شراء جهاز مناسب لببجي</h1>
+            
+            <div class="guide-section">
+                <h2>1. إيه هي الفريمات (FPS) وليه مهمة؟</h2>
+                <p>الفريمات هي عدد الصور اللي بيتم عرضها في الثانية. كل ما زادت الفريمات، كل ما كانت اللعبة أ smoot". في ببجي، الفريمات بتحدد قد إيه اللعبة هتبقى سلسة واستجابتك هتبقى سريعة.</p>
+                <ul>
+                    <li><strong>120 FPS</strong>: أفضل تجربة، استجابة فورية، حركة سلسة جداً.</li>
+                    <li><strong>90 FPS</strong>: تجربة ممتازة، مناسبة للمحترفين.</li>
+                    <li><strong>60 FPS</strong>: تجربة جيدة، مناسبة للاعبين العاديين.</li>
+                    <li><strong>أقل من 60 FPS</strong>: تجربة متوسطة، ممكن تلاقي تقطيع.</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h2>2. إيه اللي يحدد الفريمات في جهازك؟</h2>
+                <ul>
+                    <li><strong>المعالج (Processor)</strong>: أقوى معالج = فريمات أعلى.</li>
+                    <li><strong>الرام (RAM)</strong>: 8GB على الأقل عشان 90/120 فريم.</li>
+                    <li><strong>الشاشة (Screen)</strong>: لازم تدعم 90Hz أو 120Hz عشان تستفيد بالفريمات العالية.</li>
+                    <li><strong>نظام التبريد (Cooling)</strong>: الحرارة بتقلل الفريمات، لازم جهاز بتبريد كويس.</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h2>3. إزاي تعرف جهازك يدعم كام فريم؟</h2>
+                <p>في موقعنا، كل جهاز ليه بيانات حقيقية عن الفريمات اللي بيدعمها. ببساطة ابحث عن جهازك وشوف الجدول:</p>
+                <ul>
+                    <li><strong>Smooth</strong>: أعلى فريمات ممكن توصلها.</li>
+                    <li><strong>Balanced</strong>: متوسط الفريمات (استقرار أحسن).</li>
+                    <li><strong>HD / HDR</strong>: فريمات أقل بجودة أعلى.</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h2>4. أفضل أجهزة لكل فئة سعرية</h2>
+                <ul>
+                    <li><strong>أقل من 10,000 جنيه</strong>: Poco M5, Samsung A73</li>
+                    <li><strong>10,000 - 25,000 جنيه</strong>: Poco F5, Realme GT Neo 3, Xiaomi 12T Pro</li>
+                    <li><strong>أكثر من 25,000 جنيه</strong>: iPhone 14/15 Pro Max, Samsung S23/S24 Ultra, OnePlus 11</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h2>5. نصائح لتحسين الفريمات في جهازك الحالي</h2>
+                <ul>
+                    <li>خلي إعدادات الجرافيكس على <strong>Smooth</strong></li>
+                    <li>قفل أي تطبيقات شغالة في الخلفية</li>
+                    <li>شغل وضع <strong>الأداء العالي</strong> (Performance Mode) من إعدادات الجهاز</li>
+                    <li>اتأكد إن الشاشة شغالة على أعلى تردد (90Hz/120Hz)</li>
+                    <li>لو الجهاز سخن، خليه يبرد شوية قبل ما تكمل لعب</li>
+                </ul>
+            </div>
+
+            <div class="guide-section">
+                <h2>6. أسئلة شائعة</h2>
+                <p><strong>س: هل الفريمات العالية بتستهلك بطارية أسرع؟</strong><br>ج: أيوة، الفريمات العالية بتستهلك بطارية أسرع، خصوصاً مع إعدادات جرافيكس عالية.</p>
+                <p><strong>س: هل لازم شاشة 120Hz عشان 120 فريم؟</strong><br>ج: أيوة، بدون شاشة 120Hz مش هتقدر تشوف الفريمات العالية.</p>
+                <p><strong>س: ليه جهازي 120Hz لكن ببجي شغالة 60 فريم؟</strong><br>ج: غالباً لأن لعبة ببجي مش مدعمة 120 فريم على جهازك. تحقق من جدول الفريمات في موقعنا.</p>
+            </div>
+        </div>
+
+        <div class="ads-bottom">
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+1"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+2"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+3"></a></div>
+        </div>
+
+        <div class="pubg-footer">
+            <div class="social-links">
+                <a href="https://www.youtube.com/@MrBits-8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"><span>YouTube</span></a>
+                <a href="https://whatsapp.com/channel/0029Vb7vA9EHgZWYc8Y56a1w" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384023.png"><span>WhatsApp</span></a>
+                <a href="https://www.facebook.com/share/1BGqkqvAhZ/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"><span>Facebook</span></a>
+                <a href="https://www.tiktok.com/@mr.bits.8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png"><span>TikTok</span></a>
+            </div>
+            <p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | PUBG Frame Check © 2026</p>
+        </div>
+    </div>
+
+    <div id="toast" class="pubg-toast"></div>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

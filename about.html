@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عن الموقع - PUBG Frame Check</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="pubg-container">
+        <!-- إعلان أعلى الصفحة -->
+        <div class="ad-top"><div class="ad-content"><span class="ad-label">إعلان</span><div><a href="#"><img src="https://placehold.co/800x100/1a1a2e/e74c3c?text=Your+Ad+Here"></a></div></div></div>
+
+        <div class="pubg-header">
+            <div class="logo"><span class="logo-icon">🎮</span><h1>PUBG <span>Frame Check</span></h1></div>
+            <nav class="main-nav">
+                <a href="index.html" class="nav-link">🏠 الرئيسية</a>
+                <a href="popular.html" class="nav-link">🔥 الأكثر مشاهدة</a>
+                <a href="latest.html" class="nav-link">🆕 أحدث الأجهزة</a>
+                <a href="best-value.html" class="nav-link">💎 الأكثر توفيراً</a>
+                <a href="guide.html" class="nav-link">📖 دليل الشراء</a>
+                <a href="faq.html" class="nav-link">❓ أسئلة شائعة</a>
+                <a href="about.html" class="nav-link active">ℹ️ عن الموقع</a>
+            </nav>
+            <button id="themeToggle" class="pubg-btn">🌙</button>
+        </div>
+
+        <div class="dev-bio"><p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | مطور ويب</p></div>
+
+        <div class="about-container">
+            <div class="about-hero">
+                <div class="about-icon">🎯</div>
+                <h1>عن PUBG Frame Check</h1>
+                <p>موقعك الأول لمعرفة أداء جهازك في لعبة ببجي قبل الشراء</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <div class="about-card-icon">💡</div>
+                    <h3>فكرة الموقع</h3>
+                    <p>كثير من اللاعبين يشترون أجهزة بشاشات 120Hz يظنون أنها ستعطيهم 120 فريم في ببجي، لكن الحقيقة مختلفة. هنا نوفر لك البيانات الحقيقية عن الأجهزة بناءً على اختبارات فعلية وتجارب المستخدمين.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">✅</div>
+                    <h3>مصداقية 100%</h3>
+                    <p>جميع البيانات مبنية على القوائم الرسمية من لعبة ببجي وتجارب حقيقية من مجتمع اللاعبين. يتم تحديثها باستمرار للحفاظ على الدقة.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">🤖</div>
+                    <h3>ذكاء اصطناعي متطور</h3>
+                    <p>الموقع يعمل بنظام ذكاء اصطناعي متكامل يقوم بتحديث الأجهزة والأسعار والفريمات يومياً تلقائياً، لضمان حصولك على أحدث المعلومات.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">📊</div>
+                    <h3>ماذا نقدم؟</h3>
+                    <ul>
+                        <li>قاعدة بيانات لأكثر من 200 جهاز</li>
+                        <li>تفاصيل دقيقة لكل إعدادات الجرافيكس</li>
+                        <li>أجهزة تابلت وأجهزة موبايل</li>
+                        <li>تحديثات مستمرة للأجهزة الجديدة</li>
+                        <li>أسعار حقيقية من السوق المصري</li>
+                    </ul>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">🤝</div>
+                    <h3>تواصل معنا</h3>
+                    <p>للاستفسارات أو الاقتراحات، راسلنا على:<br>
+                    <strong>📧 kareemthedev@gmail.com</strong></p>
+                    <p>أو تابعني على وسائل التواصل الاجتماعي من خلال الروابط في الأسفل.</p>
+                </div>
+
+                <div class="about-card">
+                    <div class="about-card-icon">👨‍💻</div>
+                    <h3>عن المطور</h3>
+                    <p><strong>كريم عاطف</strong> - مطور ويب متخصص في تجارب المستخدم وأداء الألعاب. أكثر من 3 سنوات خبرة في تطوير مواقع مقارنة الأجهزة وأداء الألعاب. هدفه توفير معلومات دقيقة وشفافة للمستخدم العربي.</p>
+                </div>
+            </div>
+
+            <div class="about-info">
+                <h3>📌 ملاحظة مهمة</h3>
+                <p>وجود شاشة 120Hz في جهازك لا يعني بالضرورة أن لعبة ببجي ستعطيك 120 فريم. الفريمات تعتمد على قوة المعالج ودعم اللعبة للجهاز. هدفنا هو توفير المعلومات الصحيحة لك قبل أن تشتري جهازك الجديد.</p>
+            </div>
+
+            <div class="about-stats" id="aboutStats">
+                <div class="stat-big">
+                    <span class="stat-number" id="aboutDevicesCount">0</span>
+                    <span class="stat-label">جهاز في القاعدة</span>
+                </div>
+                <div class="stat-big">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">مستويات جرافيكس</span>
+                </div>
+                <div class="stat-big">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">مستويات فريم</span>
+                </div>
+                <div class="stat-big">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">تحديث تلقائي</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="ads-bottom">
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+1"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+2"></a></div>
+            <div class="ad-bottom-item"><span class="ad-label">إعلان</span><a href="#"><img src="https://placehold.co/300x200/1a1a2e/e74c3c?text=Ad+3"></a></div>
+        </div>
+
+        <div class="pubg-footer">
+            <div class="social-links">
+                <a href="https://www.youtube.com/@MrBits-8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png"><span>YouTube</span></a>
+                <a href="https://whatsapp.com/channel/0029Vb7vA9EHgZWYc8Y56a1w" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384023.png"><span>WhatsApp</span></a>
+                <a href="https://www.facebook.com/share/1BGqkqvAhZ/" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/145/145802.png"><span>Facebook</span></a>
+                <a href="https://www.tiktok.com/@mr.bits.8" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046126.png"><span>TikTok</span></a>
+            </div>
+            <p>🔧 تم التطوير بواسطة <strong>كريم عاطف</strong> | PUBG Frame Check © 2026</p>
+        </div>
+    </div>
+
+    <div id="toast" class="pubg-toast"></div>
+
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // جلب عدد الأجهزة من Firebase
+        async function updateAboutStats() {
+            try {
+                const snapshot = await db.collection("devices").get();
+                const count = snapshot.size;
+                document.getElementById("aboutDevicesCount").textContent = count;
+            } catch (error) {
+                console.error("Error fetching device count:", error);
+                document.getElementById("aboutDevicesCount").textContent = "...";
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", async () => {
+            if (typeof firebase !== 'undefined' && firebase.firestore) {
+                await updateAboutStats();
+            }
+        });
+    </script>
+</body>
+</html>
