@@ -1,15 +1,50 @@
 import requests
-from bs4 import BeautifulSoup
 import json
 import os
-import re
 from datetime import datetime
 import sys
 
-print("🚀 AI Auto Device Manager with Web Scraping -", datetime.now())
+print("🚀 AI Auto Device Manager Started -", datetime.now())
 
 # ========================================
-# 1. إعدادات Firebase
+# كل الأجهزة (موبايلات + تابلت)
+# ========================================
+
+DEVICES_LIST = [
+    # ========== موبايلات 120 FPS ==========
+    {"brand": "OnePlus", "model": "11 5G", "screenHz": 120, "maxFPS": 120, "priceEGP": 29999, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-11-5g.jpg"},
+    {"brand": "ASUS", "model": "ROG Phone 8", "screenHz": 165, "maxFPS": 120, "priceEGP": 45000, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8.jpg"},
+    {"brand": "Nubia", "model": "RedMagic 9 Pro", "screenHz": 120, "maxFPS": 120, "priceEGP": 38000, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/nubia-redmagic-9-pro.jpg"},
+    
+    # ========== موبايلات 90 FPS ==========
+    {"brand": "OnePlus", "model": "10 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 22999, "category": "flagship", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-10-pro.jpg"},
+    {"brand": "Poco", "model": "F4 GT", "screenHz": 120, "maxFPS": 90, "priceEGP": 15999, "category": "midrange", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f4-gt.jpg"},
+    {"brand": "Poco", "model": "F5", "screenHz": 120, "maxFPS": 90, "priceEGP": 18999, "category": "midrange", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f5.jpg"},
+    {"brand": "Poco", "model": "X6 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 18500, "category": "midrange", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-x6-pro.jpg"},
+    {"brand": "Samsung", "model": "Galaxy S23 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 59999, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg"},
+    {"brand": "Samsung", "model": "Galaxy S24 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 65000, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-ultra.jpg"},
+    {"brand": "Xiaomi", "model": "13T Pro", "screenHz": 144, "maxFPS": 90, "priceEGP": 26900, "category": "flagship", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t-pro.jpg"},
+    {"brand": "Xiaomi", "model": "12T Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 20999, "category": "midrange", "priceCategory": "mid", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-12t-pro.jpg"},
+    {"brand": "Realme", "model": "GT Neo 3", "screenHz": 120, "maxFPS": 90, "priceEGP": 13999, "category": "midrange", "priceCategory": "budget", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-neo-3.jpg"},
+    {"brand": "iPhone", "model": "14 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 72999, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro-max.jpg"},
+    {"brand": "iPhone", "model": "15 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 79999, "category": "flagship", "priceCategory": "premium", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro-max.jpg"},
+    
+    # ========== موبايلات 60 FPS ==========
+    {"brand": "Samsung", "model": "Galaxy A73", "screenHz": 120, "maxFPS": 60, "priceEGP": 11999, "category": "midrange", "priceCategory": "budget", "type": "phone", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a73-5g.jpg"},
+    
+    # ========== تابلت ==========
+    {"brand": "Apple", "model": "iPad Pro 12.9 (2024)", "screenHz": 120, "maxFPS": 120, "priceEGP": 65000, "category": "tablet", "priceCategory": "premium", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-pro-12-9-2022.jpg"},
+    {"brand": "Apple", "model": "iPad Pro 11 (2024)", "screenHz": 120, "maxFPS": 120, "priceEGP": 49000, "category": "tablet", "priceCategory": "premium", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-pro-11-2022.jpg"},
+    {"brand": "Apple", "model": "iPad Air (2024)", "screenHz": 60, "maxFPS": 90, "priceEGP": 32000, "category": "tablet", "priceCategory": "mid", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-air-2022.jpg"},
+    {"brand": "Apple", "model": "iPad mini (2024)", "screenHz": 60, "maxFPS": 60, "priceEGP": 24000, "category": "tablet", "priceCategory": "mid", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-ipad-mini-2021.jpg"},
+    {"brand": "Samsung", "model": "Galaxy Tab S9 Ultra", "screenHz": 120, "maxFPS": 120, "priceEGP": 55000, "category": "tablet", "priceCategory": "premium", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-s9-ultra.jpg"},
+    {"brand": "Samsung", "model": "Galaxy Tab S9+", "screenHz": 120, "maxFPS": 90, "priceEGP": 40000, "category": "tablet", "priceCategory": "mid", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-s9-plus.jpg"},
+    {"brand": "Samsung", "model": "Galaxy Tab A9+", "screenHz": 90, "maxFPS": 60, "priceEGP": 15000, "category": "tablet", "priceCategory": "budget", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-a9-plus.jpg"},
+    {"brand": "Xiaomi", "model": "Pad 6 Pro", "screenHz": 144, "maxFPS": 90, "priceEGP": 25000, "category": "tablet", "priceCategory": "mid", "type": "tablet", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-pad-6-pro.jpg"},
+]
+
+# ========================================
+# الاتصال بـ Firebase
 # ========================================
 
 def get_firebase():
@@ -31,52 +66,6 @@ def get_firebase():
         print(f"❌ Firebase init error: {e}")
         return None
 
-# ========================================
-# 2. قاعدة بيانات الأجهزة المضمونة (بدون Scraping)
-# ========================================
-
-# دي قائمة الأجهزة المعروفة اللي بتدعم فريمات عالية
-# الـ AI هيضيفهم لو مش موجودين
-DEVICES_FALLBACK = [
-    # 120 FPS
-    {"brand": "OnePlus", "model": "11 5G", "screenHz": 120, "maxFPS": 120, "priceEGP": 29999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-11-5g.jpg"},
-    {"brand": "ASUS", "model": "ROG Phone 8", "screenHz": 165, "maxFPS": 120, "priceEGP": 45000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/asus-rog-phone-8.jpg"},
-    {"brand": "Nubia", "model": "RedMagic 9 Pro", "screenHz": 120, "maxFPS": 120, "priceEGP": 38000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/nubia-redmagic-9-pro.jpg"},
-    {"brand": "Google", "model": "Pixel 8 Pro", "screenHz": 120, "maxFPS": 120, "priceEGP": 40000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/google-pixel-8-pro.jpg"},
-    
-    # 90 FPS
-    {"brand": "OnePlus", "model": "10 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 22999, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/oneplus-10-pro.jpg"},
-    {"brand": "Poco", "model": "F4 GT", "screenHz": 120, "maxFPS": 90, "priceEGP": 15999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f4-gt.jpg"},
-    {"brand": "Poco", "model": "F5", "screenHz": 120, "maxFPS": 90, "priceEGP": 18999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-f5.jpg"},
-    {"brand": "Poco", "model": "X6 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 18500, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-x6-pro.jpg"},
-    {"brand": "Samsung", "model": "Galaxy S23 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 59999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-ultra-5g.jpg"},
-    {"brand": "Samsung", "model": "Galaxy S24 Ultra", "screenHz": 120, "maxFPS": 90, "priceEGP": 65000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-ultra.jpg"},
-    {"brand": "Samsung", "model": "Galaxy S24 Plus", "screenHz": 120, "maxFPS": 90, "priceEGP": 45000, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s24-plus.jpg"},
-    {"brand": "Xiaomi", "model": "13T Pro", "screenHz": 144, "maxFPS": 90, "priceEGP": 26900, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t-pro.jpg"},
-    {"brand": "Xiaomi", "model": "12T Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 20999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-12t-pro.jpg"},
-    {"brand": "Xiaomi", "model": "14", "screenHz": 120, "maxFPS": 90, "priceEGP": 35000, "category": "flagship", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-14.jpg"},
-    {"brand": "Realme", "model": "GT Neo 3", "screenHz": 120, "maxFPS": 90, "priceEGP": 13999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-neo-3.jpg"},
-    {"brand": "Realme", "model": "GT 5G", "screenHz": 120, "maxFPS": 90, "priceEGP": 24999, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-gt-5g.jpg"},
-    {"brand": "iPhone", "model": "14 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 72999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro-max.jpg"},
-    {"brand": "iPhone", "model": "15 Pro Max", "screenHz": 120, "maxFPS": 90, "priceEGP": 79999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro-max.jpg"},
-    {"brand": "iPhone", "model": "15 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 69999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15-pro.jpg"},
-    {"brand": "Nothing", "model": "Phone 2", "screenHz": 120, "maxFPS": 90, "priceEGP": 30000, "category": "midrange", "priceCategory": "mid", "image": "https://fdn2.gsmarena.com/vv/bigpic/nothing-phone-2.jpg"},
-    {"brand": "Honor", "model": "Magic 5 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 32999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/honor-magic5-pro.jpg"},
-    {"brand": "Vivo", "model": "X90 Pro", "screenHz": 120, "maxFPS": 90, "priceEGP": 37999, "category": "flagship", "priceCategory": "premium", "image": "https://fdn2.gsmarena.com/vv/bigpic/vivo-x90-pro.jpg"},
-    
-    # 60 FPS
-    {"brand": "Samsung", "model": "Galaxy A73", "screenHz": 120, "maxFPS": 60, "priceEGP": 11999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a73-5g.jpg"},
-    {"brand": "Samsung", "model": "Galaxy A54", "screenHz": 120, "maxFPS": 60, "priceEGP": 10999, "category": "midrange", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a54.jpg"},
-    {"brand": "Poco", "model": "M5", "screenHz": 90, "maxFPS": 60, "priceEGP": 8999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/xiaomi-poco-m5.jpg"},
-    {"brand": "Realme", "model": "C55", "screenHz": 90, "maxFPS": 60, "priceEGP": 6999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/realme-c55.jpg"},
-    {"brand": "Infinix", "model": "Note 30", "screenHz": 120, "maxFPS": 60, "priceEGP": 7999, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/infinix-note-30.jpg"},
-    {"brand": "Tecno", "model": "Pova 5", "screenHz": 120, "maxFPS": 60, "priceEGP": 7499, "category": "budget", "priceCategory": "budget", "image": "https://fdn2.gsmarena.com/vv/bigpic/tecno-pova-5.jpg"},
-]
-
-# ========================================
-# 3. تحديث Firebase
-# ========================================
-
 def get_existing_devices(db):
     existing = {}
     try:
@@ -89,65 +78,49 @@ def get_existing_devices(db):
         print(f"❌ Error: {e}")
     return existing
 
-def add_device(db, device_data):
+def add_device(db, device):
     try:
         graphics = {
-            "smooth": device_data["maxFPS"],
-            "balanced": 60 if device_data["maxFPS"] >= 60 else 40,
-            "hd": 60 if device_data["maxFPS"] >= 60 else 40,
-            "hdr": 40 if device_data["maxFPS"] >= 90 else "غير مدعوم",
+            "smooth": device["maxFPS"],
+            "balanced": 60 if device["maxFPS"] >= 60 else 40,
+            "hd": 60 if device["maxFPS"] >= 60 else 40,
+            "hdr": 40 if device["maxFPS"] >= 90 else "غير مدعوم",
             "ultraHDR": "غير مدعوم",
             "extremeHDR": "غير مدعوم"
         }
         
-        new_device = {
-            "brand": device_data["brand"],
-            "model": device_data["model"],
-            "screenHz": device_data["screenHz"],
-            "maxFPS": device_data["maxFPS"],
-            "priceEGP": device_data["priceEGP"],
-            "category": device_data["category"],
-            "priceCategory": device_data["priceCategory"],
-            "image": device_data["image"],
+        device_data = {
+            "brand": device["brand"],
+            "model": device["model"],
+            "screenHz": device["screenHz"],
+            "maxFPS": device["maxFPS"],
+            "priceEGP": device["priceEGP"],
+            "category": device["category"],
+            "priceCategory": device["priceCategory"],
+            "type": device.get("type", "phone"),
+            "image": device["image"],
             "addedDate": datetime.now().isoformat(),
             "graphics": graphics
         }
         
-        db.collection("devices").add(new_device)
-        print(f"✅ Added: {device_data['brand']} {device_data['model']} ({device_data['maxFPS']} FPS)")
+        db.collection("devices").add(device_data)
+        print(f"✅ Added: {device['brand']} {device['model']} ({device['maxFPS']} FPS) - {device.get('type', 'phone')}")
         return True
     except Exception as e:
         print(f"❌ Failed: {e}")
         return False
 
-def update_device_price(db, device_id, new_price):
-    try:
-        db.collection('devices').document(device_id).update({
-            'priceEGP': new_price,
-            'last_price_update': datetime.now().isoformat()
-        })
-        print(f"💰 Price updated: {device_id} → {new_price} EGP")
-    except Exception as e:
-        print(f"❌ Update error: {e}")
-
-def update_device_image(db, device_id, new_image):
-    try:
-        db.collection('devices').document(device_id).update({
-            'image': new_image,
-            'last_image_update': datetime.now().isoformat()
-        })
-        print(f"🖼️ Image updated: {device_id}")
-    except Exception as e:
-        print(f"❌ Image error: {e}")
-
-# ========================================
-# 4. الوظيفة الرئيسية
-# ========================================
-
 def main():
     print("=" * 50)
-    print("🤖 AI Auto Device Manager")
+    print("🤖 AI Device Manager (Phones + Tablets)")
     print("=" * 50)
+    
+    phones = [d for d in DEVICES_LIST if d.get('type') == 'phone']
+    tablets = [d for d in DEVICES_LIST if d.get('type') == 'tablet']
+    
+    print(f"📱 Phones: {len(phones)}")
+    print(f"📟 Tablets: {len(tablets)}")
+    print(f"📊 Total: {len(DEVICES_LIST)}")
     
     db = get_firebase()
     if not db:
@@ -159,31 +132,19 @@ def main():
     existing = get_existing_devices(db)
     print(f"📚 Existing devices: {len(existing)}")
     
-    # إضافة الأجهزة الجديدة وتحديث الصور
     new_count = 0
-    fixed_count = 0
-    
-    for device in DEVICES_FALLBACK:
+    for device in DEVICES_LIST:
         key = f"{device['brand']}_{device['model']}"
-        
-        if key in existing:
-            # الجهاز موجود - نتحقق من الصورة
-            current_image = existing[key]['data'].get('image', '')
-            if current_image != device['image'] and 'placehold' not in device['image']:
-                update_device_image(db, existing[key]['id'], device['image'])
-                fixed_count += 1
-        else:
-            # جهاز جديد
+        if key not in existing:
             if add_device(db, device):
                 new_count += 1
+        else:
+            print(f"⏭️ Skipping: {device['brand']} {device['model']}")
     
     print("=" * 50)
-    print(f"📱 New devices added: {new_count}")
-    print(f"🖼️ Images fixed: {fixed_count}")
-    print(f"📊 Total devices now: {len(existing) + new_count}")
-    print("=" * 50)
-    print("✅ AI Auto Device Manager finished!")
-    print("🏁 Completed at:", datetime.now())
+    print(f"📱 Added {new_count} new devices")
+    print(f"📊 Total: {len(existing) + new_count}")
+    print("🏁 Finished at:", datetime.now())
 
 if __name__ == "__main__":
     main()
