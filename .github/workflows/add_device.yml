@@ -1,8 +1,12 @@
 name: Add Device on Demand
 
 on:
-  repository_dispatch:
-    types: [search-device]
+  workflow_dispatch:
+    inputs:
+      search_query:
+        description: 'اسم الجهاز'
+        required: true
+        type: string
 
 jobs:
   add-device:
@@ -16,11 +20,11 @@ jobs:
           python-version: '3.11'
           
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 firebase-admin apify-client
+        run: pip install requests firebase-admin apify-client
         
       - name: Fetch and add device
         env:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
           APIFY_API_KEY: ${{ secrets.APIFY_API_KEY }}
         run: |
-          python scraper/fetch_and_add.py "${{ github.event.client_payload.search_query }}"
+          python scraper/fetch_and_add.py "${{ github.event.inputs.search_query }}"
