@@ -6,11 +6,7 @@ from datetime import datetime
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-print("🖼️ AI Image Fixer Started -", datetime.now())
-
-# ========================================
-# الاتصال بـ Firebase
-# ========================================
+print("🖼️ AI Image Fixer (with Tavily) Started -", datetime.now())
 
 def get_firebase():
     try:
@@ -27,13 +23,8 @@ def get_firebase():
         print(f"❌ Firebase init error: {e}")
         return None
 
-# ========================================
-# التحقق من صحة الصورة
-# ========================================
-
 def check_image(url):
-    """تتأكد إذا كانت الصورة شغالة ولا لأ"""
-    if not url:
+    if not url or 'placehold' in url:
         return False
     try:
         response = requests.head(url, timeout=10, allow_redirects=True)
@@ -41,51 +32,50 @@ def check_image(url):
     except:
         return False
 
-# ========================================
-# البحث عن صورة بديلة من GSMarena
-# ========================================
-
-def search_gsmarena_image(brand, model):
-    """تبحث عن صورة الجهاز في GSMarena"""
-    
-    # تنظيف الأسماء
+def search_gsmarena(brand, model):
     brand_clean = brand.lower().strip()
     model_clean = model.lower().strip()
+    model_search = re.sub(r'[^a-z0-9]', '-', model_clean)
     
-    # إزالة كلمات زي "5g", "plus", "ultra" من الموديل للبحث
-    model_search = model_clean.replace('5g', '').replace('plus', '').replace('ultra', '').replace('pro', '').strip()
-    model_search = re.sub(r'[^a-z0-9]', '-', model_search)
-    
-    # تجربة الروابط المختلفة
-    possible_urls = [
+    urls = [
         f"https://fdn2.gsmarena.com/vv/bigpic/{brand_clean}-{model_search}.jpg",
         f"https://fdn2.gsmarena.com/vv/bigpic/{brand_clean}-{model_clean}.jpg",
         f"https://fdn2.gsmarena.com/vv/bigpic/{brand_clean}_{model_search}.jpg",
-        f"https://fdn2.gsmarena.com/vv/bigpic/{brand_clean}-{model_search}-5g.jpg",
     ]
-    
-    for url in possible_urls:
+    for url in urls:
         if check_image(url):
-            print(f"   ✅ Found: {url}")
             return url
-    
-    # لو لسة مش موجود، نجرب البحث العام
-    try:
-        search_url = f"https://fdn2.gsmarena.com/vv/bigpic/{brand_clean}-{model_search[:20]}.jpg"
-        if check_image(search_url):
-            return search_url
-    except:
-        pass
-    
     return None
 
-# ========================================
-# إصلاح الصور لجميع الأجهزة
-# ========================================
+def search_tavily_image(brand, model):
+    API_KEY = os.environ.get('TAVILY_API_KEY')
+    if not API_KEY:
+        return None
+    
+    query = f"{brand} {model} phone image"
+    url = "https://api.tavily.com/search"
+    headers = {"Content-Type": "application/json"}
+    data = {
+        "api_key": API_KEY,
+        "query": query,
+        "search_depth": "basic",
+        "max_results": 1
+    }
+    
+    try:
+        response = requests.post(url, headers=headers, json=data)
+        result = response.json()
+        if "results" in result and len(result["results"]) > 0:
+            content = result["results"][0].get("content", "")
+            # البحث عن رابط صورة في النص
+            img_match = re.search(r'https?://[^\s]+\.(jpg|jpeg|png|webp)', content)
+            if img_match:
+                return img_match.group(0)
+    except Exception as e:
+        print(f"   ⚠️ Tavily error: {e}")
+    return None
 
 def fix_all_images(db):
-    """إصلاح الصور المفقودة لكل الأجهزة"""
-    
     devices_ref = db.collection('devices')
     docs = devices_ref.stream()
     
@@ -97,48 +87,43 @@ def fix_all_images(db):
         device = doc.to_dict()
         image_url = device.get('image', '')
         
-        # لو الصورة مش موجودة أو بايظة
-        if not image_url or 'placehold' in image_url or not check_image(image_url):
-            print(f"\n🔍 Device: {device.get('brand')} {device.get('model')}")
-            print(f"   Old image: {image_url[:80] if image_url else 'None'}...")
+        if not check_image(image_url):
+            print(f"\n📱 {device.get('brand')} {device.get('model')}")
             
-            # البحث عن صورة جديدة
-            new_image = search_gsmarena_image(device.get('brand'), device.get('model'))
+            # 1. حاول من GSMarena
+            new_image = search_gsmarena(device.get('brand'), device.get('model'))
+            
+            # 2. لو مفيش، حاول من Tavily
+            if not new_image:
+                new_image = search_tavily_image(device.get('brand'), device.get('model'))
             
             if new_image:
                 doc.reference.update({'image': new_image})
-                print(f"   ✅ Updated!")
+                print(f"   ✅ Fixed!")
                 fixed_count += 1
             else:
-                print(f"   ❌ No alternative found")
+                print(f"   ❌ No image found")
     
     return fixed_count, total_count
 
-# ========================================
-# التشغيل الرئيسي
-# ========================================
-
 def main():
     print("=" * 50)
-    print("🖼️ AI Image Fixer")
+    print("🖼️ AI Image Fixer (GSMarena + Tavily)")
     print("=" * 50)
     
-    # الاتصال بـ Firebase
     db = get_firebase()
     if not db:
-        print("❌ Cannot continue without Firebase")
+        print("❌ Cannot continue")
         return
     
     print("✅ Firebase connected")
-    
-    # إصلاح الصور
     fixed, total = fix_all_images(db)
     
     print("=" * 50)
-    print(f"📊 Total devices: {total}")
-    print(f"✅ Fixed images: {fixed}")
-    print(f"❌ Still broken: {total - fixed}")
-    print("🏁 Finished at:", datetime.now())
+    print(f"📊 Total: {total}")
+    print(f"✅ Fixed: {fixed}")
+    print(f"❌ Broken: {total - fixed}")
+    print("🏁 Finished")
 
 if __name__ == "__main__":
     main()
