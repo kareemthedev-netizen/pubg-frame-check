@@ -2,9 +2,9 @@ name: Auto Device Scraper
 
 on:
   schedule:
-    - cron: '0 0 * * *'     # كل يوم الساعة 12 midnight
-    - cron: '0 6 * * *'     # وكل يوم الساعة 6 الصبح (تأمين)
-  workflow_dispatch:        # عشان تقدر تشغله يدوي لو عايز
+    - cron: '0 0 * * *'
+    - cron: '0 6 * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -26,7 +26,12 @@ jobs:
         run: |
           pip install requests beautifulsoup4 firebase-admin lxml
           
-      - name: Run scraper
+      - name: Add devices from database
         env:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
         run: python scraper/main.py
+        
+      - name: Fix broken images
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+        run: python scraper/fix_images.py
