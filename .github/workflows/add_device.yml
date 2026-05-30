@@ -1,0 +1,26 @@
+name: Add Device on Demand
+
+on:
+  repository_dispatch:
+    types: [search-device]
+
+jobs:
+  add-device:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 firebase-admin
+        
+      - name: Fetch and add device
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+          APIFY_API_KEY: ${{ secrets.APIFY_API_KEY }}
+        run: |
+          python scraper/fetch_and_add.py "${{ github.event.client_payload.search_query }}"
