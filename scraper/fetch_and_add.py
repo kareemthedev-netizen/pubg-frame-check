@@ -44,8 +44,8 @@ def fetch_from_apify(query):
         print("❌ No APIFY_API_KEY found")
         return None
     
-    # Actor ID (Google Shopping Scraper)
-    ACTOR_ID = "lucky1~google-shopping-scraper"
+    # Actor ID الصحيح (من Apify Store)
+    ACTOR_ID = "pear_fight~google-shopping-scraper"
     
     # إعدادات التشغيل
     input_data = {
@@ -58,7 +58,7 @@ def fetch_from_apify(query):
     url = f"https://api.apify.com/v2/acts/{ACTOR_ID}/runs?token={API_TOKEN}"
     
     try:
-        print(f"   🚀 Starting Actor...")
+        print(f"   🚀 Starting Actor: {ACTOR_ID}")
         response = requests.post(url, json=input_data)
         run_data = response.json()
         
@@ -214,7 +214,7 @@ def main():
             print("❌ Failed to add device to Firebase")
     else:
         print("❌ Could not fetch device data from Apify")
-        print("   ⚠️ Try running the Actor manually from Apify Console first")
+        print("   💡 Try running the Actor manually from Apify Console first")
     
     print("🏁 Finished at:", datetime.now())
 
