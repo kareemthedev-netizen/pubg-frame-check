@@ -16,7 +16,7 @@ jobs:
           python-version: '3.11'
           
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 firebase-admin
+        run: pip install requests beautifulsoup4 firebase-admin apify-client
         
       - name: Fetch and add device
         env:
