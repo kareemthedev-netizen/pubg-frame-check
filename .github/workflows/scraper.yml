@@ -24,7 +24,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4 firebase-admin lxml apify-client
+          pip install requests beautifulsoup4 firebase-admin lxml
           
       - name: Add devices from database
         env:
