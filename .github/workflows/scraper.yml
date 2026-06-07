@@ -24,7 +24,7 @@ jobs:
           
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4 firebase-admin lxml
+          pip install requests beautifulsoup4 firebase-admin lxml apify-client
           
       - name: Add devices from database
         env:
@@ -36,3 +36,8 @@ jobs:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
         run: python scraper/fix_images.py
+        
+      - name: Clean old devices
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+        run: python scraper/clean_old_devices.py
