@@ -7,6 +7,9 @@ from firebase_admin import credentials, firestore
 
 print("🚀 AI Device Manager Started -", datetime.now())
 
+# ========== التاريخ المطلوب ==========
+CUTOFF_DATE = datetime(2025, 1, 1)  # هضيف بس الأجهزة اللي تاريخها >= 1 يناير 2025
+
 def get_firebase():
     cred_json = os.environ.get('FIREBASE_CREDENTIALS')
     if cred_json:
@@ -21,8 +24,27 @@ def load_device_database():
         with open('scraper/devices_db.json', 'r', encoding='utf-8') as f:
             data = json.load(f)
             devices = data.get('devices', [])
-            print(f"✅ Loaded {len(devices)} devices from JSON")
-            return devices
+            print(f"📂 Total devices in JSON: {len(devices)}")
+            
+            # تصفية: بس الأجهزة اللي ليها تاريخ إضافة (من الـ JSON) >= CUTOFF_DATE
+            filtered = []
+            for d in devices:
+                added = d.get('addedDate', '')
+                if added:
+                    try:
+                        added_date = datetime.fromisoformat(added.replace('Z', '+00:00'))
+                        if added_date >= CUTOFF_DATE:
+                            filtered.append(d)
+                        else:
+                            print(f"   🗑️ Skipping old device: {d.get('brand')} {d.get('model')} ({added})")
+                    except:
+                        filtered.append(d)  # لو التاريخ مش واضح، سيبه عادي
+                else:
+                    # لو مفيش addedDate، نضيفه (الأجهزة الجديدة اللي هتضاف بعدين)
+                    filtered.append(d)
+            
+            print(f"✅ Kept (added after {CUTOFF_DATE.date()}): {len(filtered)} devices")
+            return filtered
     except Exception as e:
         print(f"❌ Error loading database: {e}")
         return []
@@ -80,7 +102,7 @@ def main():
     
     all_devices = load_device_database()
     if not all_devices:
-        print("❌ No devices in JSON")
+        print("❌ No devices to add")
         return
     
     existing = get_existing_devices(db)
@@ -91,7 +113,7 @@ def main():
         if key not in existing:
             new_devices.append(device)
     
-    print(f"🆕 New devices: {len(new_devices)}")
+    print(f"🆕 New devices to add: {len(new_devices)}")
     
     if len(new_devices) == 0:
         print("✅ All devices already in Firebase")
